@@ -9,6 +9,7 @@
 GenThemAll.egg-info
 .coverage
 docs/_build
+\#*\#
 env
 dist
 build/

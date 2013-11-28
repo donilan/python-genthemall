@@ -15,7 +15,7 @@ setup (
     packages = find_packages(),
     test_suite = 'nose.collector',
     tests_require = ['nose'],
-    install_requires = [],
+    install_requires = ['config'],
     entry_points = {
         'console_scripts': [
             'genthemall = genthemall.main:main',
