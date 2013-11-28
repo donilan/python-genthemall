@@ -2,6 +2,7 @@
 import sys
 from genthemall.version import get_version
 from optparse import OptionParser
+from genthemall.core import generate
 
 
 def parse_options():
@@ -14,10 +15,15 @@ def parse_options():
         default=False,
         help="show program's version number and exit"
     )
-    parser.add_option('-f', '--file',
-        default='genthemall.py',
+    parser.add_option('-f', '--config-file',
+        default='genthemall.cfg',
         metavar='PATH',
-        help="python module file to import, e.g. '../other.py'"
+        help="python module file to import, e.g. '../other.cfg'"
+    )
+    parser.add_option('-t', '--template-folder',
+        default='./gt',
+        metavar='PATH',
+        help="sepecify template folder for use."
     )
     opts, args = parser.parse_args()
     return parser, opts, args
@@ -29,6 +35,7 @@ def main():
         if options.show_version:
             print "GenThemAll version:", get_version('short')
             sys.exit(0)
+        generate(options.config_file, options.template_folder)
     except SystemExit:
         raise
     except KeyboardInterrupt:

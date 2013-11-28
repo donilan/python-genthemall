@@ -1,10 +1,21 @@
 #!/usr/bin/env python
 
-import sys, multiprocessing
+import sys, multiprocessing, os
 
 from setuptools import setup, find_packages
 
 from genthemall.version import get_version
+
+# Find template files and package them
+data_files = []
+for dirpath, dirnames, filenames in os.walk('genthemall'):
+    files = []
+    for f in filenames:
+        if f.endswith('.gt'):
+            files.append(os.path.join(dirpath, f))
+    if files:
+        data_files.append((dirpath, files))
+
 
 setup (
     name = 'GenThemAll',
@@ -19,8 +30,9 @@ setup (
     entry_points = {
         'console_scripts': [
             'genthemall = genthemall.main:main',
-            ]
-        },
+        ]
+    },
+    data_files = data_files,
     classifiers = [
     ],
 )
