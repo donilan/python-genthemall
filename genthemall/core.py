@@ -1,11 +1,11 @@
 import logging, os
 from config import Config
 
-
 log = logging.getLogger('genthemall.core')
 
 def generate(config_file, folder = None):
     template_files = find_template_files(folder)
+
     print template_files
 
 def find_template_files(folder = None):
@@ -17,7 +17,7 @@ def find_template_files(folder = None):
             for file in files:
                 if file.endswith(".gt"):
                     _files.append(os.path.join(root, file))
-    log.debug('Found template files:\n%s' % '\n'.join(_files))
+    log.debug('Found [%d ] template files.%s' % len_files)
     return _files
 
 
