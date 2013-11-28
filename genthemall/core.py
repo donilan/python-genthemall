@@ -17,7 +17,7 @@ def find_template_files(folder = None):
             for file in files:
                 if file.endswith(".gt"):
                     _files.append(os.path.join(root, file))
-    log.debug('Found [%d ] template files.%s' % len_files)
+    log.debug('Found [%d ] template files.' % len(_files))
     return _files
 
 
