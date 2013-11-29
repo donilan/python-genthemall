@@ -1,0 +1,6 @@
+<%
+name : 'java_base_model'
+version : '0.1'
+
+%>
+package com.ii2d;

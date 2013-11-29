@@ -1,0 +1,8 @@
+<%
+name : 'java_mybatis_mapper_xml'
+version : '0.1'
+
+%>
+<mapper>
+
+</mapper>

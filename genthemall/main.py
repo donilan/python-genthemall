@@ -2,7 +2,7 @@
 import sys
 from genthemall.version import get_version
 from optparse import OptionParser
-from genthemall.core import generate
+from genthemall.core import generate, list_templates
 
 
 def parse_options():
@@ -25,15 +25,23 @@ def parse_options():
         metavar='PATH',
         help="sepecify template folder for use."
     )
+    parser.add_option('-l', '--list-templates',
+        action='store_true',
+        dest='list_templates',
+        default=False,
+        help='list add template description.'
+    )
     opts, args = parser.parse_args()
     return parser, opts, args
 
 def main():
     try:
         parser, options, arguments = parse_options()
-        print options
         if options.show_version:
             print "GenThemAll version:", get_version('short')
+            sys.exit(0)
+        if options.list_templates:
+            list_templates(options.template_folder)
             sys.exit(0)
         generate(options.config_file, options.template_folder)
     except SystemExit:

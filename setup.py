@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, multiprocessing, os
+import sys, os
 
 from setuptools import setup, find_packages
 

@@ -1,0 +1,6 @@
+<%
+name : 'java_mybatis_mapper'
+version : '0.1'
+
+%>
+package com.ii2d;

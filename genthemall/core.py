@@ -1,12 +1,38 @@
-import logging, os
+import logging, os, re, io
 from config import Config
+from genthemall.version import get_version
+from mako.template import Template as MakoTemplate
 
 log = logging.getLogger('genthemall.core')
 
-def generate(config_file, folder = None):
-    template_files = find_template_files(folder)
+class Template:
+    def __init__(self, config, content):
+        self.config = config
+        self.content = content
 
-    print template_files
+def generate(config_file, folder = None):
+    print find_templates(folder)
+
+def list_templates(folder = None):
+    templates = find_templates(folder)
+    print 'GenThemAll %s List all templates.\n' % get_version('short')
+    for idx, t in enumerate(templates):
+        print '%02d.' % (idx+1), t.config.name
+
+def find_templates(folder = None):
+    """Find template files and make it in to Template."""
+    template_files = find_template_files(folder)
+    templates = []
+    for f in template_files:
+        content = open(f).read()
+        match = re.search(r'<%[^%]+%>' ,content)
+        if match:
+            config_str = match.group()
+            content_str = content.replace(config_str, '')
+            config_str = config_str[2:-2]
+            config = Config(io.BytesIO(config_str))
+            templates.append(Template(config, content_str))
+    return templates
 
 def find_template_files(folder = None):
     """Find template files from sepecify folder."""
