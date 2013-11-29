@@ -13,12 +13,12 @@ def parse_options():
         action='store_true',
         dest='show_version',
         default=False,
-        help="show program's version number and exit"
+        help="show program's version number and exit."
     )
     parser.add_option('-f', '--config-file',
         default='genthemall.cfg',
         metavar='PATH',
-        help="python module file to import, e.g. '../other.cfg'"
+        help="python module file to import, e.g. '../other.cfg'."
     )
     parser.add_option('-t', '--template-folder',
         default='./gt',
@@ -29,7 +29,13 @@ def parse_options():
         action='store_true',
         dest='list_templates',
         default=False,
-        help='list add template description.'
+        help='list template description and exit.'
+    )
+    parser.add_option('-c', '--check-templates',
+        action='store_true',
+        dest='check_templates',
+        default=False,
+        help='Verified templates and exit.'
     )
     opts, args = parser.parse_args()
     return parser, opts, args
@@ -44,6 +50,10 @@ def main():
         if options.list_templates:
             GTLTemplate(options.template_folder).list_templates()
             sys.exit(0)
+        if options.check_templates:
+            GTLTemplate(options.template_folder)
+            sys.exit(0)
+            
         generate(options.config_file, options.template_folder)
     except SystemExit:
         raise
