@@ -9,4 +9,4 @@ def test_load_config():
 def test_find_templates():
     tmpl = GTLTemplate('genthemall')
     ok_(len(tmpl.sys_templates) > 0)
-    ok_(len(tmpl.user_templates) > 0)
+    ok_(tmpl.user_templates is None)
