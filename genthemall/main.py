@@ -2,7 +2,7 @@
 import sys, logging
 from genthemall.version import get_version
 from optparse import OptionParser
-from genthemall.core import generate, list_templates
+from genthemall.core import generate, GTLTemplate
 
 
 def parse_options():
@@ -42,7 +42,7 @@ def main():
             print "GenThemAll version:", get_version('short')
             sys.exit(0)
         if options.list_templates:
-            list_templates(options.template_folder)
+            GTLTemplate(options.template_folder).list_templates()
             sys.exit(0)
         generate(options.config_file, options.template_folder)
     except SystemExit:
