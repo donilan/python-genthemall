@@ -6,18 +6,33 @@ from mako.template import Template as MakoTemplate
 log = logging.getLogger('genthemall.core')
 
 class Template:
+    """Template object for store in application runtime."""
     def __init__(self, config, content):
         self.config = config
         self.content = content
 
+def make_template(config, content, path):
+    """Make template from config and content, check config attribute before make. some attribute must be set, if not return None."""
+    if config is not None and content is not None:
+        attr_warn_msg = 'Template file [%s] must have attribute [%%s].' \
+            % os.path.basename(path)                        
+        if not hasattr(config, 'name'):
+            log.warn(attr_warn_msg % 'name')
+        elif not hasattr(config, 'version'):
+            log.warn(attr_warn_msg % 'version')
+        else:
+            return Template(config, content)
+    return None
+
 def generate(config_file, folder = None):
+    """GenThemAll generate method."""
     print find_templates(folder)
 
 def list_templates(folder = None):
     templates = find_templates(folder)
     print 'GenThemAll %s List all templates.\n' % get_version('short')
     for idx, t in enumerate(templates):
-        print '%02d.' % (idx+1), t.config.name
+        print '%02d. %30s [v %s]' % ((idx+1), t.config.name, t.config.version)
 
 def find_templates(folder = None):
     """Find template files and make it in to Template."""
@@ -31,7 +46,9 @@ def find_templates(folder = None):
             content_str = content.replace(config_str, '')
             config_str = config_str[2:-2]
             config = Config(io.BytesIO(config_str))
-            templates.append(Template(config, content_str))
+            t = make_template(config, content_str, f)
+            if t is not None:
+                templates.append(t)
     return templates
 
 def find_template_files(folder = None):

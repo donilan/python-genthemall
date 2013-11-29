@@ -1,5 +1,5 @@
 
-import sys
+import sys, logging
 from genthemall.version import get_version
 from optparse import OptionParser
 from genthemall.core import generate, list_templates
@@ -35,6 +35,7 @@ def parse_options():
     return parser, opts, args
 
 def main():
+    logging.basicConfig()
     try:
         parser, options, arguments = parse_options()
         if options.show_version:
