@@ -5,19 +5,14 @@ from mako.template import Template as MakoTemplate
 
 log = logging.getLogger('genthemall.core')
 
-class Template:
+class GTLTemplate:
     """Template object for store in application runtime."""
-    def __init__(self, config, content):
+    def __init__(self, config, content, path):
         self.config = config
         self.content = content
+        self.path = path
 
-def generate(config_file, folder = None):
-    """GenThemAll generate method."""
-    pass
-#    print find_templates(folder)
-
-
-class GTLTemplate():
+class GTLTemplateHolder():
     
     def __init__(self, folder = None):
         self.user_template_folder = folder
@@ -30,7 +25,8 @@ class GTLTemplate():
         self._init_templates()
 
     def _init_template_files(self):
-        """Find template files on user sepecify folder and genthemall default folder."""
+        """Find template files on user sepecify folder and 
+        genthemall default folder."""
         def finder_fn(_folder):
             _files = []
             for root, dirs, files in os.walk(_folder):
@@ -77,23 +73,39 @@ class GTLTemplate():
             self.user_templates = make_fn(self.user_template_files)
 
     def _make_template(self, config, content, path):
-        """Make template from config and content, check config attribute before make. some attribute must be set, if not return None."""
+        """Make template from config and content, check 
+        config attribute before make. some attribute must be set, 
+        if not return None."""
         if config is not None and content is not None:
             attr_warn_msg = 'Template file [%s] must have attribute [%%s].' \
                     % os.path.basename(path)                        
             if not hasattr(config, 'name'):
                 log.warn(attr_warn_msg % 'name')
-            elif not hasattr(config, 'version'):
-                log.warn(attr_warn_msg % 'version')
             elif config.name in [t.config.name for t in self.sys_templates]:
                 log.warn('Template [%s] already in SysTemplate holder, pleace modify your template name, and try again.' % config.name)
+            elif not hasattr(config, 'version'):
+                log.warn(attr_warn_msg % 'version')
+            elif not hasattr(config, 'dest'):
+                log.warn(attr_warn_msg % 'dest')
             else:
-                return Template(config, content)
+                return GTLTemplate(config, content, path)
         return None
 
 
+class GTLGenerator():
 
-def load_config(config_file = 'genthemall.cfg'):
-    """Load config file convert to python object."""
-    log.debug('Loading config file[%s]...', config_file)
-    return Config(config_file)
+    def __init__(self, config_file = 'genthemall.cfg', template_folder = None,
+        gtl_template_holder = None):
+        self.config = None
+        if gtl_template_holder and isinstance(gtl_template_holder \
+            , GTLTemplateHolder):
+            self.gtlTemplateHolder = gtl_template_holder
+        else:
+            self.gtlTemplateHolder = GTLTemplateHolder(template_folder)
+        self._load_config(config_file)
+        
+
+    def _load_config(self, config_file):
+        """Load config file convert to python object."""
+        log.debug('Loading config file[%s]...', config_file)
+        self.config = Config(config_file)

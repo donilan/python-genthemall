@@ -1,12 +1,12 @@
 
-from genthemall.core import load_config, GTLTemplate
+from genthemall.core import GTLTemplateHolder, GTLGenerator
 from nose.tools import eq_, ok_
 
-def test_load_config():
-    config = load_config('tests/genthemall.cfg')
-    ok_(config is not None)
-    
+def test_gtl_generator():
+    g = GTLGenerator('tests/genthemall.cfg')
+    ok_(g.config is not None)
+
 def test_find_templates():
-    tmpl = GTLTemplate('genthemall')
+    tmpl = GTLTemplateHolder('genthemall')
     ok_(len(tmpl.sys_templates) > 0)
-    ok_(tmpl.user_templates is None)
+    ok_(len(tmpl.user_templates) == 0)

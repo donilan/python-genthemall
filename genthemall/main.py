@@ -2,7 +2,7 @@
 import sys, logging
 from genthemall.version import get_version
 from optparse import OptionParser
-from genthemall.core import generate, GTLTemplate
+from genthemall.core import GTLGenerator, GTLTemplateHolder
 
 
 def parse_options():
@@ -24,6 +24,11 @@ def parse_options():
         default='./gt',
         metavar='PATH',
         help="sepecify template folder for use."
+    )
+    parser.add_option('-o', '--output-folder',
+        default='./out',
+        metavar='PATH',
+        help='Sepecify output folder for the generate files.'
     )
     parser.add_option('-l', '--list-templates',
         action='store_true',
@@ -48,13 +53,13 @@ def main():
             print "GenThemAll version:", get_version('short')
             sys.exit(0)
         if options.list_templates:
-            GTLTemplate(options.template_folder).list_templates()
+            GTLTemplateHolder(options.template_folder).list_templates()
             sys.exit(0)
         if options.check_templates:
-            GTLTemplate(options.template_folder)
+            GTLTemplateHolder(options.template_folder)
             sys.exit(0)
             
-        generate(options.config_file, options.template_folder)
+#        generate(options.config_file, options.template_folder)
     except SystemExit:
         raise
     except KeyboardInterrupt:
