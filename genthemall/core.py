@@ -26,7 +26,7 @@ class GTLTemplate():
         self.user_template_files = []
         self.sys_template_files = []
         self.user_templates = []
-        self.sys_templstes = []
+        self.sys_templates = []
         self._init_templates()
 
     def _init_template_files(self):
@@ -37,7 +37,7 @@ class GTLTemplate():
                 for file in files:
                     if file.endswith(".gt"):
                         _files.append(os.path.join(root, file))
-                        log.debug('Found [%d ] template files.' % len(_files))
+                        
             return _files
         self.sys_template_files = finder_fn(self.sys_template_folder)
         if self.user_template_folder:
@@ -85,6 +85,8 @@ class GTLTemplate():
                 log.warn(attr_warn_msg % 'name')
             elif not hasattr(config, 'version'):
                 log.warn(attr_warn_msg % 'version')
+            elif config.name in [t.config.name for t in self.sys_templates]:
+                log.warn('Template [%s] already in SysTemplate holder, pleace modify your template name, and try again.' % config.name)
             else:
                 return Template(config, content)
         return None

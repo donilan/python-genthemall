@@ -7,5 +7,6 @@ def test_load_config():
     ok_(config is not None)
     
 def test_find_templates():
-    tmpl = GTLTemplate()
+    tmpl = GTLTemplate('genthemall')
     ok_(len(tmpl.sys_templates) > 0)
+    ok_(len(tmpl.user_templates) > 0)
