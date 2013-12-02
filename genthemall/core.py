@@ -206,8 +206,10 @@ class GTLGenerator():
         dest = MakoTemplate(template.config.dest).render( \
             config=self.config, module=module)
         dest = os.path.join(self.outDir, dest)
+        log.info('Generating [%s]' % dest)
         destDir = os.path.dirname(dest)
         if not os.path.exists(destDir):
+            log.info('Dir [%s] not exists, create.' % destDir)
             os.makedirs(destDir)
         file = open(dest, 'w')
         file.write(content)

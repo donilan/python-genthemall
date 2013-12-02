@@ -18,7 +18,7 @@ def parse_options():
     parser.add_option('-f', '--config-file',
         default='genthemall.cfg',
         metavar='PATH',
-        help="python module file to import, e.g. '../other.cfg'."
+        help="Sepecify config file for use, e.g. '../other.cfg'. Default is genthemall.cfg"
     )
     parser.add_option('-t', '--template-folder',
         default='./gt',
@@ -53,13 +53,24 @@ def parse_options():
         default=False,
         help='Print the all config and exit.'
     )
+    parser.add_option('-v', '--verbose',
+        action='count',
+        dest='verbose',
+        help='Increase verbosity (specify multiple times for more).'
+    )
     opts, args = parser.parse_args()
     return parser, opts, args
 
 def main():
-    logging.basicConfig()
     try:
         parser, options, arguments = parse_options()
+        log_level = logging.WARNING # default
+        if options.verbose == 1:
+            log_level = logging.INFO
+        elif options.verbose >= 2:
+            log_level = logging.DEBUG
+        logging.basicConfig(level=log_level)
+
         if options.show_version:
             print "GenThemAll version:", get_version('short')
             sys.exit(0)
