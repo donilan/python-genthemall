@@ -1,6 +1,6 @@
 <%
 name : 'java_base_model'
 version : '0.1'
-
+dest : 'src/main/java/${module.pascalName}.java'
 %>
 package com.ii2d;

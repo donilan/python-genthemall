@@ -12,6 +12,7 @@ docs/_build
 \#*\#
 env
 dist
+out/
 build/
 tags
 TAGS

@@ -1,6 +1,6 @@
 <%
 name : 'java_mybatis_mapper'
 version : '0.1'
-
+dest : 'src/main/java/${module.name}Mapper.java'
 %>
 package com.ii2d;
