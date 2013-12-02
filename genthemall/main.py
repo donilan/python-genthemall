@@ -25,6 +25,11 @@ def parse_options():
         metavar='PATH',
         help="sepecify template folder for use."
     )
+    parser.add_option('-s', '--sepecify-templates',
+        default='all',
+        metavar='TMPL1,TMPL2,TMPL3',
+        help="sepecify template for generate."
+    )
     parser.add_option('-o', '--output-folder',
         default='./out',
         metavar='PATH',
@@ -42,6 +47,12 @@ def parse_options():
         default=False,
         help='Verified templates and exit.'
     )
+    parser.add_option('-p', '--print-config',
+        action='store_true',
+        dest='print_config',
+        default=False,
+        help='Print the all config and exit.'
+    )
     opts, args = parser.parse_args()
     return parser, opts, args
 
@@ -58,8 +69,18 @@ def main():
         if options.check_templates:
             GTLTemplateHolder(options.template_folder)
             sys.exit(0)
-            
-#        generate(options.config_file, options.template_folder)
+        
+        if options.print_config:
+            GTLGenerator(config_file=options.config_file) \
+                .print_config()
+      
+            sys.exit(0)
+
+        GTLGenerator(config_file=options.config_file, \
+            template_folder=options.template_folder, \
+            out_dir=options.output_folder) \
+            .generate(options.sepecify_templates)
+
     except SystemExit:
         raise
     except KeyboardInterrupt:

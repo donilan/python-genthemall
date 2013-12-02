@@ -95,6 +95,8 @@ class GTLTemplateHolder():
             if t.config.name == name:
                 return t
         return None
+    def find_all_templates(self):
+        return self.sys_templates + self.user_templates
 
     def _init_templates(self):
         self._init_template_files()
@@ -166,12 +168,21 @@ class GTLGenerator():
             return False
         succ_counter = 0
         fail_counter = 0
+        templates = []
         for t_name in template_names:
-            t = self.gtlTemplateHolder.find_template_by_name(t_name)
+            if t_name == 'all':
+                templates = self.gtlTemplateHolder. \
+                            find_all_templates()
+                break
+            t = self.gtlTemplateHolder.find_template_by_name(\
+                    t_name)
             if t is None:
                 log.warn('Template name[%s] not found' % t_name)
                 fail_counter += 1
                 continue
+            templates.append(t)
+            
+        for t in templates:
             if self._generate_by_template(t):
                 succ_counter += 1
             else:
