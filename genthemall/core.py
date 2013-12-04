@@ -3,6 +3,11 @@ from config import Config, Sequence, Mapping
 from genthemall.version import get_version
 from mako.template import Template as MakoTemplate
 
+__version__ = '0.1.0-dev'
+
+def get_version():
+    return __version__
+
 log = logging.getLogger('genthemall.core')
 
 default_max_map = {
@@ -79,7 +84,7 @@ class GTLTemplateHolder():
 
     def list_templates(self):
         """List all template we found, and print them on terminal."""
-        print 'GenThemAll %s List all templates.\n' % get_version('short')
+        print 'GenThemAll %s List all templates.\n' % get_version()
         def list_fn(templates, prefix_msg):
             print prefix_msg
             for idx, t in enumerate(templates):

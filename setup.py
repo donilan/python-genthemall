@@ -4,7 +4,7 @@ import sys, os
 
 from setuptools import setup, find_packages
 
-from genthemall.version import get_version
+from genthemall.core import get_version
 
 # Find template files and package them
 data_files = []
@@ -19,7 +19,7 @@ for dirpath, dirnames, filenames in os.walk('genthemall'):
 
 setup (
     name = 'GenThemAll',
-    version = get_version('short'),
+    version = get_version(),
     description = 'GenThemAll is a simple, Pythonic tool for genernate code and whatevery you want.',
     author = 'Doni',
     author_email = 'd@ii2d.com',

@@ -1,8 +1,7 @@
 
 import sys, logging
-from genthemall.version import get_version
 from optparse import OptionParser
-from genthemall.core import GTLGenerator, GTLTemplateHolder
+from genthemall.core import GTLGenerator, GTLTemplateHolder, get_version
 
 
 def parse_options():
@@ -72,7 +71,7 @@ def main():
         logging.basicConfig(level=log_level)
 
         if options.show_version:
-            print "GenThemAll version:", get_version('short')
+            print "GenThemAll version:", get_version()
             sys.exit(0)
         if options.list_templates:
             GTLTemplateHolder(options.template_folder).list_templates()
