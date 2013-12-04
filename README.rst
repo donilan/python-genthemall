@@ -1,6 +1,8 @@
 GenThemAll
 ==========
 
+This is my first open source software project, and it's not complete yet.
+
 Generate code tool::
 
   Usage: genthemall [options]
