@@ -1,5 +1,5 @@
 
-import sys, logging
+import sys, logging, os
 from optparse import OptionParser
 from genthemall.core import GTLGenerator, GTLTemplateHolder, get_version
 
@@ -80,10 +80,13 @@ def main():
             GTLTemplateHolder(options.template_folder)
             sys.exit(0)
         
+        if not os.path.exists(options.config_file):
+            print 'Config file [%s] not found.' % options.config_file
+            sys.exit(1)
+
         if options.print_config:
             GTLGenerator(config_file=options.config_file) \
-                .print_config()
-      
+                .print_config()      
             sys.exit(0)
 
         GTLGenerator(config_file=options.config_file, \
