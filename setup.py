@@ -23,6 +23,8 @@ setup (
     description = 'GenThemAll is a simple, Pythonic tool for genernate code and whatevery you want.',
     author = 'Doni',
     author_email = 'd@ii2d.com',
+    url = 'https://github.com/donilan/genthemall',
+    license = 'Apache, v 2.0',
     packages = find_packages(),
     test_suite = 'nose.collector',
     tests_require = ['nose'],
@@ -34,5 +36,8 @@ setup (
     },
     data_files = data_files,
     classifiers = [
+        'Environment :: Console',
+        'Programming Language :: Python :: 2.7',
+        'License :: OSI Approved :: Apache Software License'
     ],
 )
