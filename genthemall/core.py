@@ -226,10 +226,20 @@ class GTLGenerator():
         """Load config file convert to python object."""
         log.debug('Loading config file[%s]...', config_file)
         self.config = Config(config_file)
-        if not hasattr(self.config, 'modules'):
-            log.warn('Module in config file must have modules property.')   
+
+        # Make javaPackage property and javaPath with namespace
+        if not hasattr(self.config, 'namespace'):
+            log.error('Module in config file must have namespace property.')
         else:
-            self._init_modules_config(self.config.modules)
+            package = '.'.join(self.config.namespace.split('.')[::-1])
+            self.config.javaPackage = package
+            self.config.javaPath = package.replace('.', '/')
+    
+        # init modules properties
+        if not hasattr(self.config, 'modules'):
+            log.error('Module in config file must have modules property.')
+        else:
+            self._init_modules_config(self.config.modules)        
 
     def _init_modules_config(self, modules):
         """Init module properties, Add property pascalName, camelName, tableName to module."""

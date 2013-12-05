@@ -1,6 +1,12 @@
 <%
 name : 'java_base_model'
 version : '0.1'
-dest : 'src/main/java/${module.pascalName}.java'
+dest : 'src/main/java/${config.javaPath}/model/${module.pascalName}.java'
 %>
-package com.ii2d;
+package ${config.javaPackage}.model;
+
+public class ${module.pascalName} {
+      % for p in module.properties:
+      ${p.javaType} ${p.camelName};
+      % endfor
+}

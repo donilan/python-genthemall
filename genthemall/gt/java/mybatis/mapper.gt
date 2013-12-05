@@ -1,6 +1,9 @@
 <%
 name : 'java_mybatis_mapper'
 version : '0.1'
-dest : 'src/main/java/${module.name}Mapper.java'
+dest : 'src/main/java/${config.javaPath}/mapper/${module.name}Mapper.java'
 %>
-package com.ii2d;
+package ${config.javaPackage}.mapper;
+
+public class ${module.pascalName}Mapper {
+}
