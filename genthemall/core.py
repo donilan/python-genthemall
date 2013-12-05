@@ -3,7 +3,7 @@ from config import Config, Sequence, Mapping
 from genthemall.version import get_version
 from mako.template import Template as MakoTemplate
 
-__version__ = '0.1.0-dev'
+__version__ = '0.1.1-dev'
 
 def get_version():
     return __version__
