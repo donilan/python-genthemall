@@ -1,9 +1,9 @@
 <%
 name : 'java_mybatis_mapper'
-version : '0.1'
-dest : 'src/main/java/${config.javaPath}/mapper/${module.name}Mapper.java'
+version : '0.2'
+dest : 'src/main/java/${config["path"]}/mapper/${module["name"]}Mapper.java'
 %>
-package ${config.javaPackage}.mapper;
+package ${config['package']}.mapper;
 
-public class ${module.pascalName}Mapper {
+public class ${module['pascalName']}Mapper {
 }

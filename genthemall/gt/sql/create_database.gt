@@ -1,11 +1,11 @@
 <%
 name : 'create_database'
-version : '0.1'
-dest : '${module.pascalName}.sql'
+version : '0.2'
+dest : '${module["pascalName"]}.sql'
 %>
-DROP TABLE ${module.tableName};
-CREATE TABLE ${module.tableName} (
-  % for i, p in enumerate(module.properties):
-  ${p.columnName} ${p.databaseType}${('(%d)' % p.max) if p.type in ['string', 'text'] else ''}${',' if i+1 < len(module.properties) else ''}
+DROP TABLE ${module['tableName']};
+CREATE TABLE ${module['tableName']} (
+  % for i, f in enumerate(module['fields']):
+  ${f['columnName']} ${f['databaseType']}${('(%d)' % int(f['max'])) if f['type'] in ['string', 'text'] else ''}${',' if i+1 < len(module['fields']) else ''}
   % endfor
 );

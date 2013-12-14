@@ -7,6 +7,8 @@
 .DS_Store
 .*.swp
 GenThemAll.egg-info
+genthemall.cfg
+main.py
 .coverage
 docs/_build
 \#*\#
