@@ -3,13 +3,12 @@
 import sys, logging, os, importlib
 from optparse import OptionParser
 from genthemall.utils import load_command
-#from genthemall.core import GTLGenerator, GTLTemplateHolder, get_version
 
 USAGE = """usage: genthemall <command> [<args>]
 
  project    add or modify project property.
  module     add or modify module command property.
- property   add or modify module's properties.
+ filed      add or modify filed properties.
  generate   generate files.
  help       show command help info.
 """

@@ -7,6 +7,7 @@
 .DS_Store
 .*.swp
 GenThemAll.egg-info
+genthemall.cfg
 .coverage
 docs/_build
 \#*\#

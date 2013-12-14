@@ -1,6 +1,7 @@
 import sys, os
 from optparse import OptionParser
-from genthemall.utils import load_command
+from genthemall.utils import load_command, load_function
+from genthemall.core import GTLGenerator
 import json
 
 class BaseCommand:
@@ -95,7 +96,7 @@ class CommandHelp(BaseCommand):
 
 class CommandProject(BaseCommand):
 
-    _usage = "genthemall project [options] <projectName> <namespace> [displayName]"
+    _usage = "%prog project [options] <projectName> <namespace> [displayName]"
 
     def __init__(self, args):
         BaseCommand.__init__(self, args)
@@ -120,7 +121,7 @@ class CommandProject(BaseCommand):
         self.save_config()
 
 class CommandModule(BaseCommand):
-    _usage = 'genthemall module <moduleName> <propertyName> <propertyValue>'
+    _usage = '%prog module <moduleName> <propertyName> <propertyValue>'
 
     def __init__(self, args):
         BaseCommand.__init__(self, args)
@@ -137,7 +138,7 @@ class CommandModule(BaseCommand):
         
 class CommandField(BaseCommand):
     
-    _usage = 'genthemall field <moduleName> <filedName> <propertyName> <propertyValue>'
+    _usage = '%prog field <moduleName> <filedName> <propertyName> <propertyValue>'
 
     def __init__(self, args):
         BaseCommand.__init__(self, args)
@@ -152,8 +153,51 @@ class CommandField(BaseCommand):
         propertyValue = self.args[4]
 
         modifyField = self.get_field(moduleName, fieldName)
-        properties = modifyField.setdefault('properties', {})
-        properties[propertyName] = propertyValue
+#        properties = modifyField.setdefault('properties', {})
+        modifyField[propertyName] = propertyValue
         
         self.save_config();
 
+class CommandRemove(BaseCommand):
+    _usage = '%prog remove <moduleName> [fieldName]'
+
+    def __init__(self, args):
+        BaseCommand.__init__(self, args)
+        self.init_options()
+
+    def execute(self):
+        self.do_some_check(args_gt_length=2)
+        moduleName = self.args[1]
+        fieldName = None
+        if len(self.args) > 2:
+            fieldName = self.args[2]
+
+        config = self.load_config()
+        module = self.get_module(moduleName)
+
+        if fieldName is not None:
+            f = self.get_field(moduleName, fieldName)
+            module.get('fields', []).remove(f)
+        else:
+            config.get('modules', []).remove(module)
+            
+        self.save_config()
+        
+class CommandGenerate(BaseCommand):
+
+    _usage = '%prog generate <type> <templateName>'
+    
+    def __init__(self, args):
+        BaseCommand.__init__(self, args)
+        self.init_options()
+
+    def execute(self):
+        self.do_some_check(args_gt_length=3)
+        funcName = self.args[1]
+        templates = self.args[2:]
+        confFn = load_function('genthemall.conf.%s' % funcName)
+        config = self.load_config()
+        confFn(config)
+        print(json.dumps(config, indent=4))
+        generator = GTLGenerator(config)
+        generator.generate(templates)
