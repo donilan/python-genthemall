@@ -9,7 +9,7 @@ USAGE = """usage: genthemall <command> [<args>]
  project    add or modify project property.
  module     add or modify module command property.
  filed      add or modify filed properties.
- generate   generate files.
+ generate   generate files using MakoTemplate.
  template   List or edit some template file.
  help       show command help info.
 """

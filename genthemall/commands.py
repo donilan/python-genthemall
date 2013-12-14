@@ -139,23 +139,27 @@ class CommandModule(BaseCommand):
         
 class CommandField(BaseCommand):
     
-    _usage = '%prog field <moduleName> <filedName> <propertyName> <propertyValue>'
+    _usage = '%prog field <moduleName> <filedName> <propertyName>=<propertyValue>...'
 
     def __init__(self, args):
         BaseCommand.__init__(self, args)
         self.init_options()
 
     def execute(self):
-        self.do_some_check(args_gt_length=5)
+        self.do_some_check(args_gt_length=4)
 
         moduleName = self.args[1]
         fieldName = self.args[2]
-        propertyName = self.args[3]
-        propertyValue = self.args[4]
+
 
         modifyField = self.get_field(moduleName, fieldName)
-#        properties = modifyField.setdefault('properties', {})
-        modifyField[propertyName] = propertyValue
+        for p in self.args[3:]:
+            prop = p.split('=')
+            if len(prop) == 2:
+                modifyField[prop[0]] = prop[1]
+            else:
+                self.help()
+                sys.exit(1)
         
         self.save_config();
 

@@ -94,6 +94,8 @@ def java(config):
 def oracle(config):
     for m in config.get('modules', []):
         m.setdefault('tableName', _to_upper_name(m['name']))
+        m.setdefault('pascalName', _to_pascal_name(m['name']))
+        m.setdefault('camelName', _to_camel_name(m['name']))
         for f in m.get('fields', []):
             f.setdefault('columnName', _to_upper_name(f['name']))
             f.setdefault('databaseType', \
