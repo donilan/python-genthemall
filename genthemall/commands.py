@@ -1,8 +1,9 @@
-import sys, os
+import sys, os, logging, json
 from optparse import OptionParser
 from genthemall.utils import load_command, load_function
-from genthemall.core import GTLGenerator
-import json
+from genthemall.core import GTLGenerator, GTLTemplateHolder
+
+log = logging.getLogger('genthemall.command')
 
 class BaseCommand:
     def __init__(self, args):
@@ -198,6 +199,34 @@ class CommandGenerate(BaseCommand):
         confFn = load_function('genthemall.conf.%s' % funcName)
         config = self.load_config()
         confFn(config)
-        print(json.dumps(config, indent=4))
         generator = GTLGenerator(config)
         generator.generate(templates)
+
+class CommandTemplate(BaseCommand):
+
+    _usage = """%prog template <command> [args]
+  list    List all templates
+  edit    edit template using $EDITOR
+"""
+    
+    def __init__(self, args):
+        BaseCommand.__init__(self, args)
+        self.init_options()
+
+    def execute(self):
+        self.do_some_check(args_gt_length=2)
+        cmd = self.args[1]
+
+        holder = GTLTemplateHolder()
+        if cmd == 'list':
+            holder.list_templates()
+        elif cmd == 'edit':
+            if len(self.args) < 3:
+                log.error('Please sepecify template name for edit.')
+                sys.exit(1)
+            tmpl = holder.find_template_by_name(self.args[2])
+            if os.environ.get('EDITOR', None) is not None:
+                os.system('$EDITOR %s' % tmpl.path)
+            else:
+                log.error('Env EDITOR not set.')
+                sys.exit(1)

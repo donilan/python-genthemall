@@ -78,13 +78,22 @@ database_type_map = {
 
 def java(config):
     config['package'] = '.'.join(config['namespace'].split('.')[::-1])
+    config['path'] = config['package'].replace('.', '/')
+    for m in config.get('modules', []):
+        m.setdefault('camelName', _to_camel_name(m['name']))
+        m.setdefault('pascalName', _to_pascal_name(m['name']))
+        for f in m.get('fields', []):
+            f.setdefault('camelName', _to_camel_name(f['name']))
+            f.setdefault('pascalName', _to_pascal_name(f['name']))
+            f.setdefault('javaType', java_type_map[f.get('type')])
+            f.setdefault('javaShortType', java_short_type_map[f.get('type')])
+            f.setdefault('min', default_min_map[f.get('type')])
+            f.setdefault('max', default_max_map[f.get('type')])
     return config
 
 def oracle(config):
     for m in config.get('modules', []):
         m.setdefault('tableName', _to_upper_name(m['name']))
-        m.setdefault('camelName', _to_camel_name(m['name']))
-        m.setdefault('pascalName', _to_pascal_name(m['name']))
         for f in m.get('fields', []):
             f.setdefault('columnName', _to_upper_name(f['name']))
             f.setdefault('databaseType', \

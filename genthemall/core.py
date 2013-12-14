@@ -147,7 +147,7 @@ class GTLGenerator():
         succ_counter = 0
         fail_counter = 0
         for module in self.config.get('modules', []):
-            print(module)
+
             content = MakoTemplate(template.content).render( \
                 config=self.config, module=module)
             if self._generate_to_file(content, template, module):

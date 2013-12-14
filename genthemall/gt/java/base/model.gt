@@ -1,12 +1,12 @@
 <%
 name : 'java_base_model'
-version : '0.1'
-dest : 'src/main/java/${config.javaPath}/model/${module.pascalName}.java'
+version : '0.2'
+dest : 'src/main/java/${config["path"]}/model/${module["pascalName"]}.java'
 %>
-package ${config.javaPackage}.model;
+package ${config["package"]}.model;
 
-public class ${module.pascalName} {
-      % for p in module.properties:
-      ${p.javaType} ${p.camelName};
+public class ${module["pascalName"]} {
+      % for f in module['fields']:
+      ${f["javaType"]} ${f["camelName"]};
       % endfor
 }
