@@ -87,6 +87,7 @@ def java(config):
         m.setdefault('pascalName', _to_pascal_name(m['name']))
         for f in m.get('fields', []):
             f.setdefault('camelName', _to_camel_name(f['name']))
+            f.setdefault('required', True)
             f.setdefault('pascalName', _to_pascal_name(f['name']))
             f.setdefault('getter', 'get%s' % f.get('pascalName'))
             f.setdefault('setter', 'set%s' % f.get('pascalName'))
@@ -113,6 +114,7 @@ def oracle(config):
         m.setdefault('pascalName', _to_pascal_name(m['name']))
         m.setdefault('camelName', _to_camel_name(m['name']))
         for f in m.get('fields', []):
+            f.setdefault('required', True)
             f.setdefault('columnName', _to_upper_name(f['name']))
             f.setdefault('databaseType', \
                          database_type_map[f.get('type', 'string')])

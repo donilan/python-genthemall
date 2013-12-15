@@ -9,6 +9,6 @@ CREATE TABLE ${module['tableName']} (
       f["columnName"], 
       f["databaseType"],
       '(%d)' % int(f['max']) if f['type'] in ['string', 'text'] else '',
-      'PRIMARY KEY' if f['isId'] else ''
+      'PRIMARY KEY' if f['isId'] else 'NOT NULL' if f['required'] else '',
     ) for f in module["fields"])}
 );
