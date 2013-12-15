@@ -77,6 +77,9 @@ database_type_map = {
 }
 
 def java(config):
+    """
+    Put the config into this method, and make it to java config.
+    """
     config['package'] = '.'.join(config['namespace'].split('.')[::-1])
     config['path'] = config['package'].replace('.', '/')
     for m in config.get('modules', []):
@@ -84,23 +87,41 @@ def java(config):
         m.setdefault('pascalName', _to_pascal_name(m['name']))
         for f in m.get('fields', []):
             f.setdefault('camelName', _to_camel_name(f['name']))
+            f.setdefault('required', True)
             f.setdefault('pascalName', _to_pascal_name(f['name']))
+            f.setdefault('getter', 'get%s' % f.get('pascalName'))
+            f.setdefault('setter', 'set%s' % f.get('pascalName'))
+            f.setdefault('formatSymbol', '%d' if f.get('type') in \
+                         ['int', 'long'] else '%s')
             f.setdefault('javaType', java_type_map[f.get('type')])
             f.setdefault('javaShortType', java_short_type_map[f.get('type')])
             f.setdefault('min', default_min_map[f.get('type')])
             f.setdefault('max', default_max_map[f.get('type')])
+            f.setdefault('isId', True if f['name'] == 'id' else False)
+            f.setdefault('order', -1 if f['isId'] else 0)
+            f.setdefault('editable', False if f['isId'] else True)
+            f.setdefault('listable', False if f['isId'] else True)
+
+        m.get('fields').sort(lambda a, b: a['order'] - b['order'])
     return config
 
 def oracle(config):
+    """
+    Put the config into this method, and make it to oracle config.
+    """
     for m in config.get('modules', []):
         m.setdefault('tableName', _to_upper_name(m['name']))
         m.setdefault('pascalName', _to_pascal_name(m['name']))
         m.setdefault('camelName', _to_camel_name(m['name']))
         for f in m.get('fields', []):
+            f.setdefault('required', True)
             f.setdefault('columnName', _to_upper_name(f['name']))
             f.setdefault('databaseType', \
                          database_type_map[f.get('type', 'string')])
             f.setdefault('max', default_max_map[f.get('type', 'string')])
-        
+            f.setdefault('isId', True if f['name'] == 'id' else False)
+            f.setdefault('order', -1 if f['isId'] else 0)
+
+        m.get('fields').sort(lambda a, b: a['order'] - b['order'])        
     return config
 

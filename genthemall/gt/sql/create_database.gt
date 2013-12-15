@@ -5,7 +5,10 @@ dest : '${module["pascalName"]}.sql'
 %>
 DROP TABLE ${module['tableName']};
 CREATE TABLE ${module['tableName']} (
-  % for i, f in enumerate(module['fields']):
-  ${f['columnName']} ${f['databaseType']}${('(%d)' % int(f['max'])) if f['type'] in ['string', 'text'] else ''}${',' if i+1 < len(module['fields']) else ''}
-  % endfor
+  ${ ",\n  ".join("%s %s%s %s" % ( 
+      f["columnName"], 
+      f["databaseType"],
+      '(%d)' % int(f['max']) if f['type'] in ['string', 'text'] else '',
+      'PRIMARY KEY' if f['isId'] else 'NOT NULL' if f['required'] else '',
+    ) for f in module["fields"])}
 );

@@ -2,7 +2,7 @@ import logging, os, re, io, sys
 from mako.template import Template as MakoTemplate
 from config import Config
 
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 
 def get_version():
     return __version__
