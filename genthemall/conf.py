@@ -88,6 +88,8 @@ def java(config):
         for f in m.get('fields', []):
             f.setdefault('camelName', _to_camel_name(f['name']))
             f.setdefault('pascalName', _to_pascal_name(f['name']))
+            f.setdefault('getter', 'get%s' % f.get('pascalName'))
+            f.setdefault('setter', 'set%s' % f.get('pascalName'))
             f.setdefault('javaType', java_type_map[f.get('type')])
             f.setdefault('javaShortType', java_short_type_map[f.get('type')])
             f.setdefault('min', default_min_map[f.get('type')])
