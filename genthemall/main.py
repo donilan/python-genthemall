@@ -15,12 +15,14 @@ USAGE = """usage: genthemall <command> [<args>]
 """
 
 def main():
+    """
+    We begin here.
+    """
     if len(sys.argv) < 2:
         print(USAGE)
         sys.exit(1)
 
-    logging.basicConfig(level=logging.INFO)
-
+#    logging.basicConfig(level=logging.INFO)
     cmdName = sys.argv[1]
     CmdClass = load_command(cmdName)
     cmd = CmdClass(sys.argv[1:])

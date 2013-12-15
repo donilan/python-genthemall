@@ -77,6 +77,9 @@ database_type_map = {
 }
 
 def java(config):
+    """
+    Put the config into this method, and make it to java config.
+    """
     config['package'] = '.'.join(config['namespace'].split('.')[::-1])
     config['path'] = config['package'].replace('.', '/')
     for m in config.get('modules', []):
@@ -92,6 +95,9 @@ def java(config):
     return config
 
 def oracle(config):
+    """
+    Put the config into this method, and make it to oracle config.
+    """
     for m in config.get('modules', []):
         m.setdefault('tableName', _to_upper_name(m['name']))
         m.setdefault('pascalName', _to_pascal_name(m['name']))

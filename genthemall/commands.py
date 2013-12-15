@@ -8,22 +8,44 @@ log = logging.getLogger('genthemall.command')
 class BaseCommand:
     def __init__(self, args):
         self.parser = OptionParser(usage=self._usage, add_help_option=False)
-        self.parser.add_option('-f', dest='configFile', 
-                               default='genthemall.cfg',
-                               help='Specify genthemall config file.')
+        self.parser.add_option(
+            '-f', '--config-file', dest='configFile', 
+            default='genthemall.cfg', metavar='PATH',
+            help='Sepecify config file for use, e.g. "../other.cfg". Default is genthemall.cfg')
+        self. parser.add_option(
+            '-v', '--verbose', action='count', dest='verbose',
+            help='Increase verbosity (specify multiple times for more).')
         self._args = args
 
     def init_options(self):
+        """
+        Parser user options and init logging level
+        """
         if not hasattr(self, 'opts'):
             (self.opts, self.args) = self.parser.parse_args(self._args)
+            log_level = logging.WARNING # default
+            if self.opts.verbose == 1:
+                log_level = logging.INFO
+            elif self.opts.verbose >= 2:
+                log_level = logging.DEBUG
+            logging.basicConfig(level=log_level)
 
     def help(self):
+        """
+        Print help message.
+        """
         self.parser.print_help()
 
     def execute(self):
+        """
+        The method for execute, Sub class need implement the method.
+        """
         pass
 
     def load_config(self):
+        """
+        Load config file and just load once.
+        """
         if hasattr(self, 'conf'):
             return self.conf
         if os.path.exists(self.opts.configFile):
@@ -38,11 +60,17 @@ class BaseCommand:
         return self.conf
 
     def save_config(self):
+        """
+        Save config to file.
+        """
         f = open(self.opts.configFile, 'w')
         f.write(json.dumps(self.load_config(), indent=4))
         f.close()
 
     def get_module(self, moduleName):
+        """
+        Get module by module name from config file.
+        """
         config = self.load_config()
         modules = config.setdefault('modules', [])
 
@@ -58,6 +86,9 @@ class BaseCommand:
         return modifyModule
 
     def get_field(self, moduleName, fieldName):
+        """
+        Get field by module name and field name from config file.
+        """
         modifyModule = self.get_module(moduleName)
         fields = modifyModule.setdefault('fields', [])
         modifyField = None
@@ -72,6 +103,9 @@ class BaseCommand:
         return modifyField
 
     def do_some_check(self, args_gt_length=0):
+        """
+        Just do some check, It's ugly, so need change, but now I don't know how, just no idea.
+        """
         if not os.path.exists(self.opts.configFile):
             print('Config file [%s] not found. Please check or use genthem project command to create one.' % self.opts.configFile)
             sys.exit(1)
@@ -97,7 +131,7 @@ class CommandHelp(BaseCommand):
 
 class CommandProject(BaseCommand):
 
-    _usage = "%prog project [options] <projectName> <namespace> [displayName]"
+    _usage = "%prog project [options] <projectName> <namespace> [displayName] [options]"
 
     def __init__(self, args):
         BaseCommand.__init__(self, args)
@@ -122,7 +156,7 @@ class CommandProject(BaseCommand):
         self.save_config()
 
 class CommandModule(BaseCommand):
-    _usage = '%prog module <moduleName> <propertyName> <propertyValue>'
+    _usage = '%prog module <moduleName> <propertyName> <propertyValue> [options]'
 
     def __init__(self, args):
         BaseCommand.__init__(self, args)
@@ -139,7 +173,7 @@ class CommandModule(BaseCommand):
         
 class CommandField(BaseCommand):
     
-    _usage = '%prog field <moduleName> <filedName> <propertyName>=<propertyValue>...'
+    _usage = '%prog field <moduleName> <filedName> <propertyName>=<propertyValue>... [options]'
 
     def __init__(self, args):
         BaseCommand.__init__(self, args)
@@ -164,7 +198,7 @@ class CommandField(BaseCommand):
         self.save_config();
 
 class CommandRemove(BaseCommand):
-    _usage = '%prog remove <moduleName> [fieldName]'
+    _usage = '%prog remove <moduleName> [fieldName] [options]'
 
     def __init__(self, args):
         BaseCommand.__init__(self, args)
@@ -190,7 +224,7 @@ class CommandRemove(BaseCommand):
         
 class CommandGenerate(BaseCommand):
 
-    _usage = '%prog generate <type> <templateName>'
+    _usage = '%prog generate <type> <templateName>... [options]'
     
     def __init__(self, args):
         BaseCommand.__init__(self, args)
@@ -208,7 +242,7 @@ class CommandGenerate(BaseCommand):
 
 class CommandTemplate(BaseCommand):
 
-    _usage = """%prog template <command> [args]
+    _usage = """%prog template <command> [args] [options]
   list    List all templates
   edit    edit template using $EDITOR
 """
