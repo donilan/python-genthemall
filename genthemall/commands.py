@@ -12,10 +12,22 @@ class BaseCommand:
             '-f', '--config-file', dest='configFile', 
             default='genthemall.cfg', metavar='PATH',
             help='Sepecify config file for use, e.g. "../other.cfg". Default is genthemall.cfg')
-        self. parser.add_option(
+        self.parser.add_option(
             '-v', '--verbose', action='count', dest='verbose',
             help='Increase verbosity (specify multiple times for more).')
         self._args = args
+
+    def add_option_template(self):
+        self.parser.add_option(
+            '-t', '--template-folder',
+            default='./gt', metavar='PATH',
+            help='sepecify template folder for use.')
+
+    def add_option_output_folder(self):
+        self.parser.add_option(
+            '-o', '--output-folder',
+            default='./out', metavar='PATH',
+            help='Sepecify output folder for the generate files.')
 
     def init_options(self):
         """
@@ -228,6 +240,8 @@ class CommandGenerate(BaseCommand):
     
     def __init__(self, args):
         BaseCommand.__init__(self, args)
+        self.add_option_template()
+        self.add_option_output_folder()
         self.init_options()
 
     def execute(self):
@@ -237,8 +251,11 @@ class CommandGenerate(BaseCommand):
         confFn = load_function('genthemall.conf.%s' % funcName)
         config = self.load_config()
         confFn(config)
-        generator = GTLGenerator(config)
+        generator = GTLGenerator(config=config, \
+                                 template_folder=self.opts.template_folder,\
+                                 out_dir=self.opts.output_folder)
         generator.generate(templates)
+
 
 class CommandTemplate(BaseCommand):
 
@@ -249,13 +266,14 @@ class CommandTemplate(BaseCommand):
     
     def __init__(self, args):
         BaseCommand.__init__(self, args)
+        self.add_option_template()
         self.init_options()
 
     def execute(self):
         self.do_some_check(args_gt_length=2)
         cmd = self.args[1]
 
-        holder = GTLTemplateHolder()
+        holder = GTLTemplateHolder(folder=self.opts.template_folder)
         if cmd == 'list':
             holder.list_templates()
         elif cmd == 'edit':
