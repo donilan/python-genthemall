@@ -9,4 +9,18 @@ public class ${module["pascalName"]} {
       % for f in module['fields']:
       ${f["javaType"]} ${f["camelName"]};
       % endfor
+
+      % for f in module['fields']:
+      public ${f["javaType"]} ${f["getter"]}(){
+      	     return ${f["camelName"]};
+      }
+      public void ${f["setter"]}(${f["javaType"]} ${f["camelName"]}){
+      	     this.${f["camelName"]} = ${f["camelName"]};
+      }
+      % endfor
+
+      public String toString() {
+      	     return String.format("${', '.join('%s: %s' % (f['camelName'], f['formatSymbol']) for f in module['fields'])}", 
+	     ${', '.join(f['camelName'] for f in module['fields'])});
+      }
 }

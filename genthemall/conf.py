@@ -90,10 +90,18 @@ def java(config):
             f.setdefault('pascalName', _to_pascal_name(f['name']))
             f.setdefault('getter', 'get%s' % f.get('pascalName'))
             f.setdefault('setter', 'set%s' % f.get('pascalName'))
+            f.setdefault('formatSymbol', '%d' if f.get('type') in \
+                         ['int', 'long'] else '%s')
             f.setdefault('javaType', java_type_map[f.get('type')])
             f.setdefault('javaShortType', java_short_type_map[f.get('type')])
             f.setdefault('min', default_min_map[f.get('type')])
             f.setdefault('max', default_max_map[f.get('type')])
+            f.setdefault('isId', True if f['name'] == 'id' else False)
+            f.setdefault('order', -1 if f['isId'] else 0)
+            f.setdefault('editable', False if f['isId'] else True)
+            f.setdefault('listable', False if f['isId'] else True)
+
+        m.get('fields').sort(lambda a, b: a['order'] - b['order'])
     return config
 
 def oracle(config):
@@ -109,6 +117,9 @@ def oracle(config):
             f.setdefault('databaseType', \
                          database_type_map[f.get('type', 'string')])
             f.setdefault('max', default_max_map[f.get('type', 'string')])
-        
+            f.setdefault('isId', True if f['name'] == 'id' else False)
+            f.setdefault('order', -1 if f['isId'] else 0)
+
+        m.get('fields').sort(lambda a, b: a['order'] - b['order'])        
     return config
 
