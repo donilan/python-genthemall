@@ -7,6 +7,10 @@ install:
 test: install
 	sh genthemall-example.sh
 
+.PHONY: setversion
+setversion:
+	sed "/__version.\+'/c __version__ = '$(version)'" genthemall/core.py
+
 .PHONY : clean
 clean:
 	rm dist genthemall/*~ genthemall/*.pyc *~ *.egg-info build *.cfg out -rf
