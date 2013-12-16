@@ -49,8 +49,7 @@ class GTLTemplateHolder():
         def list_fn(templates, prefix_msg):
             print prefix_msg
             for idx, t in enumerate(templates):
-                print '%02d. %30s [v %s]' % ((idx+1), t.config.name, \
-                    t.config.version)
+                print '%02d. %30s' % ((idx+1), t.config.name)
         list_fn(self.sys_templates, 'GenThemAll default templates:')
         if self.user_templates:
             list_fn(self.user_templates, 'User templates:')
@@ -124,12 +123,7 @@ class GTLGenerator():
         fail_counter = 0
         templates = []
         for t_name in template_names:
-            if t_name == 'all':
-                templates = self.gtlTemplateHolder. \
-                            find_all_templates()
-                break
-            t = self.gtlTemplateHolder.find_template_by_name(\
-                    t_name)
+            t = self.gtlTemplateHolder.find_template_by_name(t_name)
             if t is None:
                 log.warn('Template name[%s] not found' % t_name)
                 fail_counter += 1
