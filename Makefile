@@ -1,0 +1,12 @@
+upload: dist
+	python setup.py sdist upload
+
+install:
+	python setup.py install
+
+test: install
+	sh genthemall-example.sh
+
+.PHONY : clean
+clean:
+	rm dist genthemall/*~ genthemall/*.pyc *~ *.egg-info build *.cfg out -rf
