@@ -2,6 +2,10 @@ python GenThemAll CHANGELOG
 ===========================
 This file is used to list changes made in each version of the python GenThemAll.
 
+v0.2.2
+### New Feature
+- Add command print config.
+
 v0.2.1
 ------
 ### New Feature

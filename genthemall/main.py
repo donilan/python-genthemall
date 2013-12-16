@@ -6,12 +6,14 @@ from genthemall.utils import load_command
 
 USAGE = """usage: genthemall <command> [<args>]
 
- project    add or modify project property.
- module     add or modify module command property.
- filed      add or modify filed properties.
- generate   generate files using MakoTemplate.
- template   List or edit some template file.
- help       show command help info.
+ project     Add or modify project property.
+ module      Add or modify module command property.
+ filed       Add or modify filed properties.
+ remove      Remove specify module or field.
+ generate    generate files using MakoTemplate.
+ template    List or edit some template file.
+ printConfig Print sepecify type config.
+ help        show command help info.
 """
 
 def main():
