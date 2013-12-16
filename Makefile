@@ -9,7 +9,7 @@ test: install
 
 .PHONY: setversion
 setversion:
-	sed "/__version.\+'/c __version__ = '$(version)'" genthemall/core.py
+	sed -i "/__version.\+=.\+'/c __version__ = '$(version)'" genthemall/core.py
 
 .PHONY : clean
 clean:
