@@ -1,8 +1,0 @@
-<%
-name : 'java_mybatis_mapper_xml'
-version : '0.2'
-dest : 'src/main/resources/mybatis/${module["camelName"]}.xml'
-%>
-<mapper>
-
-</mapper>
