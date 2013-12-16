@@ -1,6 +1,6 @@
 import sys, os, logging, json
 from optparse import OptionParser
-from genthemall.utils import load_command, load_function
+from genthemall.utils import load_command, load_function, transform_config
 from genthemall.core import GTLGenerator, GTLTemplateHolder
 
 log = logging.getLogger('genthemall.command')
@@ -246,11 +246,10 @@ class CommandGenerate(BaseCommand):
 
     def execute(self):
         self.do_some_check(args_gt_length=3)
-        funcName = self.args[1]
+        _type = self.args[1]
         templates = self.args[2:]
-        confFn = load_function('genthemall.conf.%s' % funcName)
         config = self.load_config()
-        confFn(config)
+        transform_config(config, _type)
         generator = GTLGenerator(config=config, \
                                  template_folder=self.opts.template_folder,\
                                  out_dir=self.opts.output_folder)
@@ -286,3 +285,17 @@ class CommandTemplate(BaseCommand):
             else:
                 log.error('Env EDITOR not set.')
                 sys.exit(1)
+
+class CommandPrintConfig(BaseCommand):
+    _usage = """%prog printConfig <type> [options]"""
+        
+    def __init__(self, args):
+        BaseCommand.__init__(self, args)
+        self.init_options()
+
+    def execute(self):
+        self.do_some_check(args_gt_length=2)
+        _type = self.args[1]
+        config = self.load_config()
+        transform_config(config, _type)
+        print(json.dumps(config, indent=4))
