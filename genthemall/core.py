@@ -66,36 +66,25 @@ class GTLGenerator():
         """Generate with sepecify template names."""
         if self.config is None or self.gtlTemplateHolder is None:
             log.error('Config load fail or Template load fail.')
-            return False
+            sys.exit(1)
 
-        t = self.gtlTemplateHolder.find_template_by_name(template)
-        if t is None:
+        template = self.gtlTemplateHolder.find_template_by_name(template)
+        if template is None:
             log.error('Template name[%s] not found' % template)
             sys.exit(1)
 
-        self._generate_by_template(t, dest)
-        
-    def _generate_by_template(self, template, dest):
-        for module in self.config.get('modules', []):
-            content = MakoTemplate(filename=template).render( \
-                config=self.config, module=module)
-            if self._generate_to_file(content, template, dest):
-                succ_counter += 1
-            else: 
-                fail_counter += 1
-        return (succ_counter, fail_counter)
-
-    def _generate_to_file(self, content, template, dest):
-        """Generate content and write to file."""
-        dest = MakoTemplate(dest).render(config=self.config, module=module)
         dest = os.path.join(self.outDir, dest)
-        log.info('Generating [%s]' % dest)
-        destDir = os.path.dirname(dest)
-        if not os.path.exists(destDir):
-            log.info('Dir [%s] not exists, create.' % destDir)
-            os.makedirs(destDir)
-        file = open(dest, 'w')
-        file.write(content)
-        file.close()
-        return True
+        for module in self.config.get('modules', []):
+            out = MakoTemplate(dest).render(config=self.config, module=module)
+            log.info('Generating [%s]' % out)
+            destDir = os.path.dirname(dest)
+            tmpl = MakoTemplate(filename=template)
+            content = tmpl.render(config=self.config, module=module)
+            if not os.path.exists(destDir):
+                log.info('Dir [%s] not exists, create.' % destDir)
+                os.makedirs(destDir)
+
+            file = open(out, 'w')
+            file.write(content)
+            file.close()
 ### class GTLGenerator
