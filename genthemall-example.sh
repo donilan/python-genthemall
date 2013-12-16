@@ -31,10 +31,12 @@ genthemall field sysRole roleName type=string
 
 
 ### Generate create database sql file
-genthemall generate java.create_database "\${module['pascalName']}.sql"
+genthemall generate oracle.create_database "\${module['pascalName']}.sql" -v && cat out/SysRole.sql
+
+
 # And then see the output. :)
 
 ### Generate java model file
-genthemall generate java.model "src/main/java/com/ii2d/model/\${module['pascalName']}.java"
+genthemall generate java.model "src/main/java/\${config['path']}/model/\${module['pascalName']}.java" -v && cat out/src/main/java/com/ii2d/model/SysRole.java
 # And then see the output. :)
 

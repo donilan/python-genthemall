@@ -62,15 +62,15 @@ class GTLGenerator():
         else:
             self.gtlTemplateHolder = GTLTemplateHolder(template_folder)
 
-    def generate(self, template, dest):
+    def generate(self, tmpl_name, dest):
         """Generate with sepecify template names."""
         if self.config is None or self.gtlTemplateHolder is None:
             log.error('Config load fail or Template load fail.')
             sys.exit(1)
 
-        template = self.gtlTemplateHolder.find_template_by_name(template)
+        template = self.gtlTemplateHolder.find_template_by_name(tmpl_name)
         if template is None:
-            log.error('Template name[%s] not found' % template)
+            log.error('Template name[%s] not found' % tmpl_name)
             sys.exit(1)
 
         dest = os.path.join(self.outDir, dest)
