@@ -3,24 +3,49 @@ GenThemAll
 
 This is my first open source software project, and it's not complete yet.
 
-Generate code tool::
+Script for generate example::
 
-  Usage: genthemall [options]
+  #!/usr/bin/env sh
 
-  Options:
-  -h, --help            show this help message and exit
-  -V, --version         show program's version number and exit.
-  -f PATH, --config-file=PATH
-                        Sepecify config file for use, e.g. '../other.cfg'.
-                        Default is genthemall.cfg
-  -t PATH, --template-folder=PATH
-                        sepecify template folder for use.
-  -s TMPL1,TMPL2,TMPL3, --sepecify-templates=TMPL1,TMPL2,TMPL3
-                        sepecify template for generate.
-  -o PATH, --output-folder=PATH
-                        Sepecify output folder for the generate files.
-  -l, --list-templates  list template description and exit.
-  -c, --check-templates
-                        Verified templates and exit.
-  -p, --print-config    Print the all config and exit.
-  -v, --verbose         Increase verbosity (specify multiple times for more).
+  ### install genthemall
+  pip install genthemall
+
+  # generate project config file
+  genthemall project myProject ii2d.com
+
+  ### SysUser
+  # add a module name sysUser and add field id type int.
+  genthemall field sysUser id type=int
+
+  # add field username type string, max length 40, min length 6.
+  genthemall field sysUser username type=string max=40 min=6
+
+  # add field password type string, max length 40, min length 8.
+  genthemall field sysUser password type=string max=40 min=8
+
+  # add field email type string.
+  genthemall field sysUser email type=string
+
+  # add field address type string
+  genthemall field sysUser address type=string
+
+  # add field sex type int
+  genthemall field sysUser sex type=int
+
+  ### SysRole
+  # add a module name sysRole and add field id type int.
+  genthemall field sysRole id type=int
+
+  # add field roleName type string.
+  genthemall field sysRole roleName type=string
+
+  ### Generate create database sql file
+  genthemall generate oracle.create_database "\${module['pascalName']}.sql" -v && cat out/SysRole.sql
+
+
+  # And then see the output. :)
+
+  ### Generate java model file
+  genthemall generate java.model "src/main/java/\${config['path']}/model/\${module['pascalName']}.java" -v && cat out/src/main/java/com/ii2d/model/SysRole.java
+  # And then see the output. :)
+
