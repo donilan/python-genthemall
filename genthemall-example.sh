@@ -30,37 +30,11 @@ genthemall field sysRole id type=int
 genthemall field sysRole roleName type=string
 
 
-
 ### Generate create database sql file
-genthemall generate oracle create_database && cat out/SysUser.sql 
-
-### Output
-#DROP TABLE SYS_USER;
-#CREATE TABLE SYS_USER (
-#  ID NUMBER,
-#  USERNAME VARCHAR2(40),
-#  PASSWORD VARCHAR2(40),
-#  EMAIL VARCHAR2(256),
-#  ADDRESS VARCHAR2(256),
-#  SEX NUMBER
-#);
+genthemall generate java.create_database "\${module['pascalName']}.sql"
+# And then see the output. :)
 
 ### Generate java model file
-genthemall generate java java_base_model && cat out/src/main/java/com/ii2d/model/SysUser.java 
-
-### Output
-#INFO:genthemall.core:Generating [out/src/main/java/com/ii2d/model/SysUser.java]
-#INFO:genthemall.core:Generating [out/src/main/java/com/ii2d/model/SysRole.java]
-
-#package com.ii2d.model;
-
-#public class SysUser {
-#      java.lang.Integer id;
-#      java.lang.String username;
-#      java.lang.String password;
-#      java.lang.String email;
-#      java.lang.String address;
-#      java.lang.Integer sex;
-#}
-
+genthemall generate java.model "src/main/java/com/ii2d/model/\${module['pascalName']}.java"
+# And then see the output. :)
 

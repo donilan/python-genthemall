@@ -13,4 +13,4 @@ setversion:
 
 .PHONY : clean
 clean:
-	rm dist genthemall/*~ genthemall/*.pyc *~ *.egg-info build *.cfg out -rf
+	rm dist genthemall/*~ genthemall/*.pyc *~ *.egg-info build *.cfg out .genthemall -rf
