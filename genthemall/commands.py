@@ -20,7 +20,7 @@ class BaseCommand:
     def add_option_template(self):
         self.parser.add_option(
             '-t', '--template-folder',
-            default='./gt', metavar='PATH',
+            default='./.genthemall', metavar='PATH',
             help='sepecify template folder for use.')
 
     def add_option_output_folder(self):
@@ -236,7 +236,7 @@ class CommandRemove(BaseCommand):
         
 class CommandGenerate(BaseCommand):
 
-    _usage = '%prog generate <type> <templateName>... [options]'
+    _usage = '%prog generate <templateName> <dest> [options]'
     
     def __init__(self, args):
         BaseCommand.__init__(self, args)
@@ -246,14 +246,20 @@ class CommandGenerate(BaseCommand):
 
     def execute(self):
         self.do_some_check(args_gt_length=3)
-        _type = self.args[1]
-        templates = self.args[2:]
+        template = self.args[1]
+        dest = self.args[2]
         config = self.load_config()
-        transform_config(config, _type)
+        typeIdx = template.find('.')
+        if typeIdx == -1:
+            log.error('template name must be "type.templatename".')
+            sys.exit(1)
+        transform_config(config, template[:typeIdx])
         generator = GTLGenerator(config=config, \
                                  template_folder=self.opts.template_folder,\
                                  out_dir=self.opts.output_folder)
-        generator.generate(templates)
+        log.debug('Generator init done, and using config type [%s].' \
+                  % template[:typeIdx])
+        generator.generate(template, dest)
 
 
 class CommandTemplate(BaseCommand):

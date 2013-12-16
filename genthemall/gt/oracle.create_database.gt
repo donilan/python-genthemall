@@ -1,9 +1,5 @@
-<%
-name : 'create_database'
-version : '0.2'
-dest : '${module["pascalName"]}.sql'
-%>
 DROP TABLE ${module['tableName']};
+
 CREATE TABLE ${module['tableName']} (
   ${ ",\n  ".join("%s %s%s %s" % ( 
       f["columnName"], 
