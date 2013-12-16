@@ -56,7 +56,20 @@ def copyfile(source, dest, buffer_size=1024*1024):
     source.close()
     dest.close()
 
-def copyfiles(src, dest):
-    for (root, dirs, files) in os.walk(src):
-        print(dirs)
+def copyfiles(src, dest, ignore=None):
+    if os.path.isdir(src):
+        if not os.path.isdir(dest):
+            os.makedirs(dest)
+        files = os.listdir(src)
+        if ignore is not None:
+            ignored = ignore(src, files)
+        else:
+            ignored = set()
+        for f in files:
+            if f not in ignored:
+                copyfiles(os.path.join(src, f), 
+                                    os.path.join(dest, f), 
+                                    ignore)
+    else:
+        copyfile(src, dest)
             
