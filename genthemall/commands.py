@@ -242,6 +242,9 @@ class CommandGenerate(BaseCommand):
         BaseCommand.__init__(self, args)
         self.add_option_template()
         self.add_option_output_folder()
+        self.parser.add_option(
+            '-l', '--one-file', default=False,
+            help='Just generate a file.')
         self.init_options()
 
     def execute(self):
@@ -254,9 +257,9 @@ class CommandGenerate(BaseCommand):
             log.error('template name must be "type.templatename".')
             sys.exit(1)
         transform_config(config, template[:typeIdx])
-        generator = GTLGenerator(config=config, \
-                                 template_folder=self.opts.template_folder,\
-                                 out_dir=self.opts.output_folder)
+        generator = GTLGenerator(
+            config=config, template_folder=self.opts.template_folder,
+            out_dir=self.opts.output_folder, one_file=self.opts.one_file)
         log.debug('Generator init done, and using config type [%s].' \
                   % template[:typeIdx])
         generator.generate(template, dest)

@@ -53,9 +53,11 @@ class GTLTemplateHolder():
 
 class GTLGenerator():
     """GTLGenerator"""
-    def __init__(self, config, template_folder = None, gtl_template_holder = None, out_dir = 'out'):
+    def __init__(self, config, template_folder = None, gtl_template_holder = None\
+                 , out_dir = 'out', one_file = False):
         self.outDir = out_dir
         self.config = config
+        self.oneFile = one_file
         if gtl_template_holder and isinstance(gtl_template_holder \
             , GTLTemplateHolder):
             self.gtlTemplateHolder = gtl_template_holder
@@ -74,17 +76,27 @@ class GTLGenerator():
             sys.exit(1)
 
         dest = os.path.join(self.outDir, dest)
-        for module in self.config.get('modules', []):
-            out = MakoTemplate(dest).render(config=self.config, module=module)
-            log.info('Generating [%s]' % out)
-            destDir = os.path.dirname(dest)
-            tmpl = MakoTemplate(filename=template)
-            content = tmpl.render(config=self.config, module=module)
-            if not os.path.exists(destDir):
-                log.info('Dir [%s] not exists, create.' % destDir)
-                os.makedirs(destDir)
 
-            file = open(out, 'w')
-            file.write(content)
-            file.close()
+        # Just generate a file if oneFile be setted.
+        if self.oneFile:
+            self._generate_to_file(template, dest, config=self.config)
+            return
+
+        for module in self.config.get('modules', []):
+            self._generate_to_file(template, dest, config=self.config, module=module)
+
+
+    def _generate_to_file(self, tmpl_file_name, dest, **data):
+        out = MakoTemplate(dest).render(**data)
+        log.info('Generating [%s]' % out)
+        destDir = os.path.dirname(dest)
+        tmpl = MakoTemplate(filename=tmpl_file_name)
+        content = tmpl.render(**data)
+        if not os.path.exists(destDir):
+            log.info('Dir [%s] not exists, create.' % destDir)
+            os.makedirs(destDir)
+
+        file = open(out, 'w')
+        file.write(content)
+        file.close()
 ### class GTLGenerator
