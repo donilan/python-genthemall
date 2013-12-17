@@ -1,5 +1,5 @@
+% for module in config['modules']:
 DROP TABLE ${module['tableName']};
-
 CREATE TABLE ${module['tableName']} (
   ${ ",\n  ".join("%s %s%s %s" % ( 
       f["columnName"], 
@@ -8,3 +8,4 @@ CREATE TABLE ${module['tableName']} (
       'PRIMARY KEY' if f['isId'] else 'NOT NULL' if f['required'] else '',
     ) for f in module["fields"])}
 );
+% endfor
