@@ -10,6 +10,7 @@ GenThemAll.egg-info
 genthemall.cfg
 main.py
 .coverage
+.genthemall
 docs/_build
 \#*\#
 env

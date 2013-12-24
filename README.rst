@@ -39,6 +39,7 @@ Script for generate example::
   # add field roleName type string.
   genthemall field sysRole roleName type=string
 
+<<<<<<< HEAD
 
 
   ### Generate create database sql file
@@ -72,4 +73,14 @@ Script for generate example::
   #      java.lang.String address;
   #      java.lang.Integer sex;
   #}
+=======
+  ### Generate create database sql file
+  genthemall generate oracle.create_database "init.sql" -v --one-file && cat out/init.sql
+
+  # And then see the output. :)
+
+  ### Generate java model file
+  genthemall generate java.model "src/main/java/\${config['path']}/model/\${module['pascalName']}.java" -v && cat out/src/main/java/com/ii2d/model/SysRole.java
+  # And then see the output. :)
+>>>>>>> dev
 
