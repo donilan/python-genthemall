@@ -88,14 +88,13 @@ class GTLGenerator():
 
     def _generate_to_file(self, tmpl_file_name, dest, **data):
         out = MakoTemplate(dest).render(**data)
-        log.info('Generating [%s]' % out)
         destDir = os.path.dirname(out)
-        tmpl = MakoTemplate(filename=tmpl_file_name)
-        content = tmpl.render(**data)
         if not os.path.exists(destDir):
             log.info('Dir [%s] not exists, create.' % destDir)
             os.makedirs(destDir)
-
+        log.info('Generating [%s]' % out)
+        tmpl = MakoTemplate(filename=tmpl_file_name)
+        content = tmpl.render(**data)
         file = open(out, 'w')
         file.write(content)
         file.close()
