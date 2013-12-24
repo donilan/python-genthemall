@@ -47,4 +47,3 @@ Script for generate example::
   ### Generate java model file
   genthemall generate java.model "src/main/java/\${config['path']}/model/\${module['pascalName']}.java" -v && cat out/src/main/java/com/ii2d/model/SysRole.java
   # And then see the output. :)
-
