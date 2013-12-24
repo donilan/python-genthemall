@@ -31,7 +31,7 @@ genthemall field sysRole roleName type=string
 
 
 ### Generate create database sql file
-genthemall generate oracle.create_database "\${module['pascalName']}.sql" -v && cat out/SysRole.sql
+genthemall generate oracle.create_database "init.sql" -v --one-file && cat out/init.sql
 
 
 # And then see the output. :)

@@ -1,4 +1,4 @@
-import logging, os, re, io, sys
+import logging, os, re, io, sys, json
 from mako.template import Template as MakoTemplate
 from config import Config
 from genthemall.utils import copyfiles
@@ -89,7 +89,7 @@ class GTLGenerator():
     def _generate_to_file(self, tmpl_file_name, dest, **data):
         out = MakoTemplate(dest).render(**data)
         log.info('Generating [%s]' % out)
-        destDir = os.path.dirname(dest)
+        destDir = os.path.dirname(out)
         tmpl = MakoTemplate(filename=tmpl_file_name)
         content = tmpl.render(**data)
         if not os.path.exists(destDir):
@@ -100,3 +100,60 @@ class GTLGenerator():
         file.write(content)
         file.close()
 ### class GTLGenerator
+
+
+### class GTLConfig
+class GTLConfig:
+    
+    def __init__(self, config_file):
+        self.configFile = config_file
+        content = '{}'
+        if os.path.exists(config_file):
+            f = open(config_file)
+            content = f.read()
+            if len(content) == 0:
+                content = '{}'
+            f.close()
+        self.conf = json.loads(content)
+            
+    def save(self):
+        """
+        Save config to file.
+        """
+        f = open(self.configFile, 'w')
+        f.write(json.dumps(self.conf, indent=4))
+        f.close()
+
+    def get_module(self, moduleName):
+        """
+        Get module by module name from config file.
+        """
+        modules = self.conf.setdefault('modules', [])
+        modifyModule = None
+        for module in modules:
+            if module.get('name') == moduleName:
+                modifyModule = module
+                break
+        if modifyModule is None:
+            modifyModule = {}
+            modules.append(modifyModule)
+            modifyModule['name'] = moduleName
+        return modifyModule
+
+    def get_field(self, moduleName, fieldName):
+        """
+        Get field by module name and field name from config file.
+        """
+        modifyModule = self.get_module(moduleName)
+        fields = modifyModule.setdefault('fields', [])
+        modifyField = None
+        for f in fields:
+            if f.get('name', '') == fieldName:
+                modifyField = f
+                break
+        if modifyField is None:
+            modifyField = {}
+            modifyField['name'] = fieldName
+            fields.append(modifyField)
+        return modifyField
+### END class GTLConfig

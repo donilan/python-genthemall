@@ -1,7 +1,7 @@
 import sys, os, logging, json
 from optparse import OptionParser
 from genthemall.utils import load_command, load_function, transform_config
-from genthemall.core import GTLGenerator, GTLTemplateHolder
+from genthemall.core import GTLGenerator, GTLTemplateHolder, GTLConfig
 
 log = logging.getLogger('genthemall.command')
 
@@ -54,66 +54,6 @@ class BaseCommand:
         """
         pass
 
-    def load_config(self):
-        """
-        Load config file and just load once.
-        """
-        if hasattr(self, 'conf'):
-            return self.conf
-        if os.path.exists(self.opts.configFile):
-            f = open(self.opts.configFile)
-            content = f.read()
-            if len(content) == 0:
-                content = '{}'
-            self.conf = json.loads(content)
-            f.close()
-        else:
-            self.conf = json.loads('{}')
-        return self.conf
-
-    def save_config(self):
-        """
-        Save config to file.
-        """
-        f = open(self.opts.configFile, 'w')
-        f.write(json.dumps(self.load_config(), indent=4))
-        f.close()
-
-    def get_module(self, moduleName):
-        """
-        Get module by module name from config file.
-        """
-        config = self.load_config()
-        modules = config.setdefault('modules', [])
-
-        modifyModule = None
-        for module in modules:
-            if module.get('name') == moduleName:
-                modifyModule = module
-                break
-        if modifyModule is None:
-            modifyModule = {}
-            modules.append(modifyModule)
-            modifyModule['name'] = moduleName
-        return modifyModule
-
-    def get_field(self, moduleName, fieldName):
-        """
-        Get field by module name and field name from config file.
-        """
-        modifyModule = self.get_module(moduleName)
-        fields = modifyModule.setdefault('fields', [])
-        modifyField = None
-        for f in fields:
-            if f.get('name', '') == fieldName:
-                modifyField = f
-                break
-        if modifyField is None:
-            modifyField = {}
-            modifyField['name'] = fieldName
-            fields.append(modifyField)
-        return modifyField
-
     def do_some_check(self, args_gt_length=0):
         """
         Just do some check, It's ugly, so need change, but now I don't know how, just no idea.
@@ -160,12 +100,12 @@ class CommandProject(BaseCommand):
         if len(self.args) > 3:
             displayName = self.args[3]
 
-        conf = self.load_config()
-
+        gtlConfig = GTLConfig(self.opts.configFile)
+        conf = gtlConfig.conf
         conf['projectName'] = projectName
         conf['namespace'] = namespace
         conf['displayName'] = displayName
-        self.save_config()
+        gtlConfig.save()
 
 class CommandModule(BaseCommand):
     _usage = '%prog module <moduleName> <propertyName> <propertyValue> [options]'
@@ -179,9 +119,10 @@ class CommandModule(BaseCommand):
         moduleName = self.args[1]
         propertyName = self.args[2]
         propertyValue = self.args[3]
-        module = self.get_module(moduleName)
+        gtlConfig = GTLConfig(self.opts.configFile)
+        module = gtlConfig.get_module(moduleName)
         module[propertyName] = propertyValue
-        self.save_config()
+        gtlConfig.save()
         
 class CommandField(BaseCommand):
     
@@ -197,8 +138,8 @@ class CommandField(BaseCommand):
         moduleName = self.args[1]
         fieldName = self.args[2]
 
-
-        modifyField = self.get_field(moduleName, fieldName)
+        gtlConfig = GTLConfig(self.opts.configFile)
+        modifyField = gtlConfig.get_field(moduleName, fieldName)
         for p in self.args[3:]:
             prop = p.split('=')
             if len(prop) == 2:
@@ -207,7 +148,7 @@ class CommandField(BaseCommand):
                 self.help()
                 sys.exit(1)
         
-        self.save_config();
+        gtlConfig.save()
 
 class CommandRemove(BaseCommand):
     _usage = '%prog remove <moduleName> [fieldName] [options]'
@@ -223,16 +164,17 @@ class CommandRemove(BaseCommand):
         if len(self.args) > 2:
             fieldName = self.args[2]
 
-        config = self.load_config()
-        module = self.get_module(moduleName)
+        gtlConfig = GTLConfig(self.opts.configFile)
+        config = gtlConfig.conf
+        module = gtlConfig.get_module(moduleName)
 
         if fieldName is not None:
-            f = self.get_field(moduleName, fieldName)
+            f = gtlConfig.get_field(moduleName, fieldName)
             module.get('fields', []).remove(f)
         else:
             config.get('modules', []).remove(module)
             
-        self.save_config()
+        gtlConfig.save()
         
 class CommandGenerate(BaseCommand):
 
@@ -244,6 +186,7 @@ class CommandGenerate(BaseCommand):
         self.add_option_output_folder()
         self.parser.add_option(
             '-l', '--one-file', default=False,
+            action='store_true',
             help='Just generate a file.')
         self.init_options()
 
@@ -251,7 +194,8 @@ class CommandGenerate(BaseCommand):
         self.do_some_check(args_gt_length=3)
         template = self.args[1]
         dest = self.args[2]
-        config = self.load_config()
+        gtlConfig = GTLConfig(self.opts.configFile)
+        config = gtlConfig.conf
         typeIdx = template.find('.')
         if typeIdx == -1:
             log.error('template name must be "type.templatename".')
@@ -305,6 +249,7 @@ class CommandPrintConfig(BaseCommand):
     def execute(self):
         self.do_some_check(args_gt_length=2)
         _type = self.args[1]
-        config = self.load_config()
+        gtlConfig = GTLConfig(self.opts.configFile)
+        config = gtlConfig.conf
         transform_config(config, _type)
         print(json.dumps(config, indent=4))
