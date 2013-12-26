@@ -85,6 +85,7 @@ def java(config):
     for m in config.get('modules', []):
         m.setdefault('camelName', _to_camel_name(m['name']))
         m.setdefault('pascalName', _to_pascal_name(m['name']))
+        m.setdefault('displayName', _to_pascal_name(m['name']))
         for f in m.get('fields', []):
             f.setdefault('camelName', _to_camel_name(f['name']))
             f.setdefault('required', True)

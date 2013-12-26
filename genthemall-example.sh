@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
 
+### install genthemall
+pip install genthemall
+
 # generate project config file
 genthemall project myProject ii2d.com
 

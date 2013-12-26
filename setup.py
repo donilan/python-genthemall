@@ -24,7 +24,7 @@ setup (
     author = 'Doni',
     author_email = 'd@ii2d.com',
     url = 'https://github.com/donilan/python-genthemall',
-    license = 'Apache, v 2.0',
+    license = 'Apache License, Version 2.0',
     packages = find_packages(),
     test_suite = 'nose.collector',
     tests_require = ['nose'],

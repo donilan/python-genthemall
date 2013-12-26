@@ -3,6 +3,7 @@ python GenThemAll CHANGELOG
 This file is used to list changes made in each version of the python GenThemAll.
 
 v0.3.0
+------
 ### New Feature
 - Make template more simple.
 - And an argument dest path to generate command for dest file output.
