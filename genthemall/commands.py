@@ -233,8 +233,11 @@ class CommandTemplate(BaseCommand):
                 log.error('Please sepecify template name for edit.')
                 sys.exit(1)
             tmpl = holder.find_template_by_name(self.args[2])
+            if tmpl is None:
+                log.warn('Template name [%s] not exists.' % self.args[2])
+                sys.exit(1)
             if os.environ.get('EDITOR', None) is not None:
-                os.system('$EDITOR %s' % tmpl.path)
+                os.system('$EDITOR %s' % tmpl)
             else:
                 log.error('Env EDITOR not set.')
                 sys.exit(1)
