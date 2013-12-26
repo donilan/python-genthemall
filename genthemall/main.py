@@ -8,7 +8,7 @@ USAGE = """usage: genthemall <command> [<args>]
 
  project     Add or modify project property.
  module      Add or modify module command property.
- filed       Add or modify filed properties.
+ field       Add or modify field properties.
  remove      Remove specify module or field.
  generate    generate files using MakoTemplate.
  template    List or edit some template file.
@@ -26,7 +26,11 @@ def main():
 
 #    logging.basicConfig(level=logging.INFO)
     cmdName = sys.argv[1]
-    CmdClass = load_command(cmdName)
-    cmd = CmdClass(sys.argv[1:])
-    cmd.execute()
+    try:
+        CmdClass = load_command(cmdName)
+        cmd = CmdClass(sys.argv[1:])
+        cmd.execute()
+    except AttributeError:
+        print(USAGE)
+        sys.exit(1)
 
