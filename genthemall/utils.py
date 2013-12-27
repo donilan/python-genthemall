@@ -1,4 +1,4 @@
-import logging, importlib, sys, os
+import logging, importlib, sys, os, string
 
 log = logging.getLogger('genthemall.utils')
 
@@ -73,3 +73,15 @@ def copyfiles(src, dest, ignore=None):
     else:
         copyfile(src, dest)
             
+def transform_value(x):
+    if not isinstance(x, str):
+        return x
+    if x.lower() in ("true"):
+        return True
+    elif x.lower() in ("false"):
+        return False
+    elif x == '0':
+        return 0
+    return x.isalpha() and x or x.isdigit() and int(x) or x.isalnum() \
+        and x or len(set(string.punctuation).intersection(x)) == 1 and \
+        x.count('.') == 1 and float(x) or x
