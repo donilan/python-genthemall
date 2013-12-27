@@ -1,6 +1,7 @@
 import sys, os, logging, json
 from optparse import OptionParser
-from genthemall.utils import load_command, load_function, transform_config
+from genthemall.utils import load_command, \
+    load_function, transform_config, transform_value
 from genthemall.core import GTLGenerator, GTLTemplateHolder, GTLConfig
 
 log = logging.getLogger('genthemall.command')
@@ -143,7 +144,7 @@ class CommandField(BaseCommand):
         for p in self.args[3:]:
             prop = p.split('=')
             if len(prop) == 2:
-                modifyField[prop[0]] = prop[1]
+                modifyField[prop[0]] = transform_value(prop[1])
             else:
                 self.help()
                 sys.exit(1)
